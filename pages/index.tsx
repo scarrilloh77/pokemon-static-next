@@ -1,20 +1,24 @@
 import { GetStaticProps, NextPage } from 'next';
+import { pokeApi } from '../api';
 import { Layout } from '../components/layouts';
 
-const HomePage: NextPage = (props) => {
-  console.log(props);
+interface IHomePage {
+  pokemons: any;
+}
+
+interface IPokemon {
+  name: string;
+  url: string;
+}
+
+const HomePage: NextPage<IHomePage> = (props) => {
   return (
     <>
       <Layout title="Listado de pokemons">
         <ul>
-          <li>Pokemon</li>
-          <li>Pokemon</li>
-          <li>Pokemon</li>
-          <li>Pokemon</li>
-          <li>Pokemon</li>
-          <li>Pokemon</li>
-          <li>Pokemon</li>
-          <li>Pokemon</li>
+          {props.pokemons.map((pokemon: IPokemon) => (
+            <li key={pokemon.name}>{pokemon.name}</li>
+          ))}
         </ul>
       </Layout>
     </>
@@ -23,9 +27,11 @@ const HomePage: NextPage = (props) => {
 
 // Solo se pueden usar dentro de las pages. y se construyen del lado del servidor. Solo se ejecutan una unica vez.
 export const getStaticProps: GetStaticProps = async (ctx) => {
+  const { data } = await pokeApi.get('/pokemon?limit=151');
+
   return {
     props: {
-      name: 'Sebastian',
+      pokemons: data.results,
     },
   };
 };
