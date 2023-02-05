@@ -7,7 +7,6 @@ const HomePage: NextPage = () => {
   return (
     <>
       <Layout title="Listado de pokemons">
-        <div>HomePage</div>
         <Button color="gradient">Hola mundo</Button>
       </Layout>
     </>
