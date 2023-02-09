@@ -23,7 +23,10 @@ const HomePage: NextPage<IHomePage> = ({ pokemons }) => {
   );
 };
 
-// Solo se pueden usar dentro de las pages. y se construyen del lado del servidor. Solo se ejecutan una unica vez.
+// getStaticProps: Propiedades estaticas generadas a la hora de construccion de la app (build).
+// Solo se pueden usar dentro de las pages. y se construyen del lado del servidor. Nunca corren en el cliente.
+// dev => Se llaman cada vez que se hace una solicitud a la page.
+// build de prod => Solo se ejecutada una vez y no se vuelve a llamar.
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const { data } = await pokeApi.get<PokemonListResponse>('/pokemon?limit=151');
 
