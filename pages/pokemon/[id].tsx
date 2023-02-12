@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { pokeApi } from '../../api';
 import { Layout } from '../../components/layouts';
 import { Pokemon } from '../../interfaces';
-import { localFavorites } from '../../utils';
+import { getPokemonInfo, localFavorites } from '../../utils';
 import confetti from 'canvas-confetti';
 
 interface Props {
@@ -118,19 +118,11 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 // Despues que se ejecutan los getStaticPaths se pasa a los getStaticProps (flujo de datos).
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  // los params llegan del getStaticPaths.
-  const { id } = params as { id: string }; // Otra forma de definir una interfaz.
-  const { data } = await pokeApi.get<Pokemon>(`/pokemon/${id}`);
-
-  const pokemon = {
-    id: data.id,
-    name: data.name,
-    sprites: data.sprites,
-  };
+  const { id } = params as { id: string };
 
   return {
     props: {
-      pokemon,
+      pokemon: await getPokemonInfo(id),
     },
   };
 };
