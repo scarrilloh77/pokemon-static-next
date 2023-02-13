@@ -1,4 +1,4 @@
-import { Grid, Image } from '@nextui-org/react';
+import { Grid } from '@nextui-org/react';
 import { GetStaticProps, NextPage } from 'next';
 import { pokeApi } from '../api';
 import { Layout } from '../components/layouts';
@@ -13,7 +13,6 @@ const HomePage: NextPage<IHomePage> = ({ pokemons }) => {
   return (
     <>
       <Layout title="Listado de pokemons">
-        <Image src="/img/banner.png" width={200} height={150} />
         <Grid.Container gap={2} justify="flex-start">
           {pokemons.map((pokemon) => (
             <PokemonCard key={pokemon.id} pokemon={pokemon} />
