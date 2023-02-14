@@ -1,11 +1,10 @@
 import { Button, Card, Container, Grid, Image, Text } from '@nextui-org/react';
+import confetti from 'canvas-confetti';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useState } from 'react';
-import { pokeApi } from '../../api';
 import { Layout } from '../../components/layouts';
 import { Pokemon } from '../../interfaces';
 import { getPokemonInfo, localFavorites } from '../../utils';
-import confetti from 'canvas-confetti';
 
 interface Props {
   pokemon: Pokemon;
@@ -116,7 +115,7 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 };
 
 // Despues que se ejecutan los getStaticPaths se pasa a los getStaticProps (flujo de datos).
-
+// getStaticPaths siempre necesita de getStaticProps, pero getStaticProps no necesita de getStaticPaths.
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params as { id: string };
 
@@ -124,6 +123,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       pokemon: await getPokemonInfo(id),
     },
+    revalidate: 86400, //La pagina se revalida cada 24 horas.
   };
 };
 
