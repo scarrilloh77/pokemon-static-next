@@ -101,30 +101,38 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
   );
 };
 
-// You should use getStaticPaths if you’re statically pre-rendering pages that use dynamic routes
-// getStaticPaths: Solo se ejecutan del lado del servidor (al igual que getStaticProps)
-// dev => Se llaman cada vez que se hace una solicitud a la page.
-// build de prod => Solo se ejecutada una vez y no se vuelve a llamar. Se crean las pages estaticamente.
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
   const pokemons151 = [...Array(151)].map((value, index) => `${index + 1}`);
 
   return {
     paths: pokemons151.map((id) => ({ params: { id } })),
-    fallback: false, // Para no sacar al usuario de la pantall. Mostrar 404 cuando no exista.
+    // fallback: false,
+    fallback: 'blocking',
   };
 };
 
-// Despues que se ejecutan los getStaticPaths se pasa a los getStaticProps (flujo de datos).
-// getStaticPaths siempre necesita de getStaticProps, pero getStaticProps no necesita de getStaticPaths.
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params as { id: string };
 
+  const pokemon = await getPokemonInfo(id);
+
+  if (!pokemon) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
   return {
     props: {
-      pokemon: await getPokemonInfo(id),
+      pokemon,
     },
-    revalidate: 86400, //La pagina se revalida cada 24 horas.
+    revalidate: 86400,
   };
 };
 
 export default PokemonPage;
+
+// yarn start: Para usar la aplicacion de produccion.
